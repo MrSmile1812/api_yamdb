@@ -10,10 +10,9 @@ git clone https://github.com/MrSmile1812/api_yamdb
 ```
 cd api_yamdb
 ```
-```
+
 Cоздать, активировать виртуальное окружение и обновить менеджер пакетов:
 
-```
 * Если у вас Linux/macOS:
 
     ```
@@ -30,7 +29,7 @@ Cоздать, активировать виртуальное окружени�
     python -m pip install --upgrade pip
     ```
 
-```
+
 Установить зависимости из файла requirements.txt:
 
 ```
@@ -39,7 +38,7 @@ pip install -r requirements.txt
 
 Выполнить миграции:
 
-```
+
 * Если у вас Linux/macOS:
 
     ```
@@ -51,11 +50,11 @@ pip install -r requirements.txt
     ```
     python manage.py migrate
     ```
-```
+
 
 Запустить проект:
 
-```
+
 * Если у вас Linux/macOS:
 
     ```
@@ -67,4 +66,4 @@ pip install -r requirements.txt
     ```
     python manage.py runserver
     ```
-```
+
