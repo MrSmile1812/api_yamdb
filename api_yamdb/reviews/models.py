@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
-from constants import MIN_SCORE, MAX_SCORE
+from .constants import MIN_SCORE, MAX_SCORE
 
 
 class Review(models.Model):

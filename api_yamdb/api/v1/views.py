@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from serializers import CommentSerializer, ReviewSerializer
+from .serializers import CommentSerializer, ReviewSerializer
 from rest_framework.pagination import LimitOffsetPagination
 from django.shortcuts import get_object_or_404
 
@@ -13,8 +13,6 @@ class ReviewViewSet(viewsets.ModelViewSet):
         return title.reviews.all()
 
         
-
-
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     permission_classes = ...
