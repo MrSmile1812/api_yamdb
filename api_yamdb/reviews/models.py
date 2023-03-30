@@ -5,17 +5,21 @@ from constants import MIN_SCORE, MAX_SCORE
 
 class Review(models.Model):
     title = models.ForeignKey(
+        '''
         Title,
         on_delete=models.CASCADE,
         related_name="reviews",
-        verbose_name="Название произведения",
+        verbose_name="Название произведения" 
+        '''
     )
     text = models.TextField(verbose_name="Отзыв")
     author = models.ForeignKey(
+        '''
         User,
         on_delete=models.CASCADE,
         related_name="reviews",
-        verbose_name="Автор",
+        verbose_name="Автор"
+        '''
     )
     score = models.IntegerField(
         verbose_name="Оценка",
@@ -38,10 +42,12 @@ class Comment(models.Model):
     )
     text = models.TextField(verbose_name="Комментарий")
     author = models.ForeignKey(
+        '''
         User,
         on_delete=models.CASCADE,
         related_name="reviews",
-        verbose_name="Автор",
+        verbose_name="Автор"
+        '''
     )
     pub_date = models.DateTimeField(
         "Дата добавления", auto_now_add=True, db_index=True
