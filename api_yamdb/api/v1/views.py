@@ -1,26 +1,13 @@
 from rest_framework import viewsets
-
-
-class CategoryViewSet(viewsets.ModelViewSet):
-    ...
-
-
-class GenreViewSet(viewsets.ModelViewSet):
-    ...
-
-
-class TitleViewSet(viewsets.ModelViewSet):
-    ...
-
+from serializers import CommentSerializer, ReviewSerializer
+from rest_framework.pagination import LimitOffsetPagination
 
 class ReviewViewSet(viewsets.ModelViewSet):
-    ...
+    serializer_class = ReviewSerializer
+    pagination_class = LimitOffsetPagination
+    permission_classes = ...
 
 
 class CommentViewSet(viewsets.ModelViewSet):
-    ...
-
-
-class UserViewSet(viewsets.ModelViewSet):
-    ...
-
+    serializer_class = CommentSerializer
+    permission_classes = ...
