@@ -11,7 +11,8 @@ class ReviewSerializer(serializers.ModelSerializer):
     )
 
     def validate(self, data):
-        """Валидируем, что на одно произведение пользователь может оставить только один отзыв."""
+        """Валидируем, что на одно произведение 
+        пользователь может оставить только один отзыв."""
         request = self.context.get("request")
         if request.method == "POST":
             author = request.user
