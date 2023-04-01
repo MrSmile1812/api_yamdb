@@ -20,6 +20,10 @@ router.register(
     CommentViewSet,
     basename="comments",
 )
+router.register(
+    r"categories/(?P<slug>[-\w]+)/", CategoryViewSet, basename="categories"
+)
+router.register(r"genres/(?P<slug>[-\w]+)/", GenreViewSet, basename="genres")
 
 urlpatterns = router.urls
 

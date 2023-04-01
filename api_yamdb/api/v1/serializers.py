@@ -12,20 +12,17 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review
         fields = ("id", "title", "text", "author", "score", "pub_date")
 
-        def validate(self, data):
-            request = self.context["request"]
-            author = request.user
-            title = self.context["request"].parser_context["kwargs"][
-                "title_id"
-            ]
-
-            if request.method == "POST":
-                if Review.objects.filter(author=author, title=title).exists():
-                    raise serializers.ValidationError(
-                        "Вами уже был оставлен отзыв на это произведение"
-                    )
-
-            return data
+    def validate(self, data):
+        """Валидируем, что на одно произведение пользователь может оставить только один отзыв."""
+        request = self.context["request"]
+        author = request.user
+        title = self.context["request"].parser_context["kwargs"]["title_id"]
+        if request.method == "POST":
+            if Review.objects.filter(author=author, title=title).exists():
+                raise serializers.ValidationError(
+                    "Вами уже был оставлен отзыв на это произведение"
+                )
+        return data
 
 
 class CommentSerializer(serializers.ModelSerializer):
