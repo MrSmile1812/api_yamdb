@@ -20,12 +20,22 @@ class User(AbstractUser):
         error_messages={
             "unique": ("A user with that username already exists."),
         },
+        blank=False,
+        null=False,
     )
     email = models.EmailField(
-        verbose_name="Email", max_length=254, unique=True
+        verbose_name="Email",
+        max_length=254,
+        unique=True,
+        blank=False,
+        null=False,
     )
     role = models.CharField(
-        verbose_name="Роль", choices=TYPE_OF_USER, default="user", max_length=9
+        verbose_name="Роль",
+        choices=TYPE_OF_USER,
+        default="user",
+        max_length=9,
+        blank=True,
     )
     bio = models.TextField(
         verbose_name="Биография",
