@@ -6,11 +6,17 @@ from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.core.mail import send_mail
 from rest_framework.permissions import AllowAny, IsAdminUser
-from .serializers import CreateUserSerializer, ObtainTokenSerializer
+from .serializers import CreateUserSerializer, ObtainTokenSerializer,  CommentSerializer, ReviewSerializer
 from django.contrib.auth import get_user_model
 from .permissions import AuthorOrStaffOrReadOnly, AdminOrReadOnly
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.tokens import default_token_generator
+from rest_framework import viewsets
+from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from reviews.models import Review, Title
+
+from django.shortcuts import get_object_or_404
 
 
 User = get_user_model()
@@ -72,3 +78,51 @@ def create_token(request):
         )
     token = RefreshToken.for_user(user)
     return Response({'token': token}, status=status.HTTP_200_OK)
+
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    """Класс для работы с отзывами."""
+
+    serializer_class = ReviewSerializer
+    pagination_class = LimitOffsetPagination
+    permission_classes = IsAuthenticatedOrReadOnly
+
+    def get_queryset(self):
+        title_id = self.kwargs.get("title_id")
+        current_title = get_object_or_404(
+            Title.objects.select_related("category", "genre"),
+            pk=title_id,
+        )
+        return current_title.reviews.all()
+
+    def perform_create(self, serializer):
+        title_id = self.kwargs.get("title_id")
+        current_title = get_object_or_404(
+            Title.objects.select_related("category", "genre"),
+            pk=title_id,
+        )
+        serializer.save(author=self.request.user, title=current_title)
+
+
+class CommentViewSet(viewsets.ModelViewSet):
+    """Класс для работы с комментариями."""
+
+    serializer_class = CommentSerializer
+    permission_classes = IsAuthenticatedOrReadOnly
+
+    def get_queryset(self):
+        current_review = get_object_or_404(
+            Review.objects.select_related("title", "author"),
+            pk=self.kwargs.get("review_id"),
+        )
+        return current_review.comments.all()
+
+    def perform_create(self, serializer):
+        title_id = self.kwargs.get("title_id")
+        review_id = self.kwargs.get("review_id")
+        review = get_object_or_404(
+            Review.objects.select_related("title", "author"),
+            id=review_id,
+            title=title_id,
+        )
+        serializer.save(author=self.request.user, review=review)
