@@ -1,6 +1,5 @@
-from django.urls import path, include
-from rest_framework_simplejwt.views import TokenObtainPairView
-from .views import create_user
+from django.urls import path
+from .views import create_user, create_token
 
 
 urlpatterns = [
@@ -10,12 +9,6 @@ urlpatterns = [
         name='signup'),
     path(
         "v1/auth/token/",
-        TokenObtainPairView.as_view(),
+        create_token,
         name='token_obtain_pair'),
 ]
-
-#path(
-       # "v1/users/me/", 
-       # UserEditViewSet.as_view(),
-       # name='edit_user'
-        #),

@@ -39,7 +39,7 @@ class User(AbstractUser):
     role = models.CharField(
         verbose_name="Роль", choices=TYPE_OF_USER, default="user", max_length=9
     )
-    conformition_code = models.CharField(
+    confirmation_code = models.CharField(
         max_length=100,
         blank=True,
         null=True,
