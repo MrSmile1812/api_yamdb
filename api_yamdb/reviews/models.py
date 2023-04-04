@@ -4,7 +4,9 @@ from django.db import models
 
 from reviews.constants import MAX_SCORE, MIN_SCORE
 from reviews.validators import (
-    MaxValueValidator, MinValueValidator, UnicodeCategoryOrGenreNameValidator,
+    MaxValueValidator,
+    MinValueValidator,
+    UnicodeCategoryOrGenreNameValidator,
 )
 from user.models import User
 
@@ -59,7 +61,7 @@ class Title(models.Model):
         on_delete=models.SET_NULL,
     )
     description = models.TextField(
-        "Описание",
+        verbose_name="Описание",
         blank=True,
         null=True,
     )
