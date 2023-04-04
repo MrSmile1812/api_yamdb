@@ -31,7 +31,7 @@ class ObtainTokenSerializer(serializers.ModelSerializer):
         confirmation_code = data.get('confirmation_code')
         if not username and not confirmation_code:
             raise serializers.ValidationError(
-                f'Нет {username}, {confirmation_code}'
+                'Пользователь не найден'
             )
         return data
 
