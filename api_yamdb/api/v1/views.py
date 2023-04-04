@@ -1,12 +1,14 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.filters import SearchFilter
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 
 from api.filters import TitleFilter
+from api.permissions import AdminOrReadOnly, AuthorOrStaffOrReadOnly
 from api.v1.mixins import ModelMixinSet
 from api.v1.serializers import (
     CategorySerializer,
@@ -26,6 +28,7 @@ class UserViewSet(viewsets.ModelViewSet):
     lookup_field = "username"
     filter_backends = (SearchFilter,)
     search_fields = ("username",)
+    permission_classes = IsAdminUser
 
     def retrieve(self, request, *args, **kwargs):
         self.object = get_object_or_404(
@@ -41,6 +44,7 @@ class CategoryViewSet(ModelMixinSet):
     filter_backends = (SearchFilter,)
     search_fields = ("name",)
     lookup_field = "slug"
+    permission_classes = AdminOrReadOnly
 
 
 class GenreViewSet(ModelMixinSet):
@@ -49,6 +53,7 @@ class GenreViewSet(ModelMixinSet):
     filter_backends = (SearchFilter,)
     search_fields = ("name",)
     lookup_field = "slug"
+    permission_classes = AdminOrReadOnly
 
 
 class TitleViewSet(viewsets.ModelViewSet):
@@ -56,12 +61,14 @@ class TitleViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TitleFilter
     serializer_class = TitleSerializer
+    permission_classes = AdminOrReadOnly
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
     """Класс для работы с отзывами."""
 
     serializer_class = ReviewSerializer
+    permission_classes = AuthorOrStaffOrReadOnly
 
     def get_queryset(self):
         title_id = self.kwargs.get("title_id")
@@ -84,6 +91,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     """Класс для работы с комментариями."""
 
     serializer_class = CommentSerializer
+    permission_classes = AuthorOrStaffOrReadOnly
 
     def get_queryset(self):
         current_review = get_object_or_404(
