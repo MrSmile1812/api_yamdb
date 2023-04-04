@@ -10,6 +10,7 @@ from api.v1.views import (
     TitleViewSet,
     UserViewSet,
 )
+from .views import create_user, create_token
 
 
 app_name = "api"
@@ -31,5 +32,13 @@ router.register(
 urlpatterns = router.urls
 
 urlpatterns = [
+    path(
+        "v1/auth/signup/",
+        create_user,
+        name='signup'),
+    path(
+        "v1/auth/token/",
+        create_token,
+        name='token_obtain_pair'),
     path("v1/", include(router.urls)),
 ]
