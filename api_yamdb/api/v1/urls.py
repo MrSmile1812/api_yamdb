@@ -12,6 +12,7 @@ from api.v1.views import (
 )
 from .views import create_user, create_token
 
+
 app_name = "api"
 
 router = routers.DefaultRouter()
@@ -27,10 +28,6 @@ router.register(
     CommentViewSet,
     basename="comments",
 )
-router.register(
-    r"categories/(?P<slug>[-\w]+)/", CategoryViewSet, basename="categories"
-)
-router.register(r"genres/(?P<slug>[-\w]+)/", GenreViewSet, basename="genres")
 
 urlpatterns = router.urls
 

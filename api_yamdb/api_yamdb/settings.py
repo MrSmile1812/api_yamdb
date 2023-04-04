@@ -15,6 +15,9 @@ AUTH_USER_MODEL = "users.User"
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 
+AUTH_USER_MODEL = "user.User"
+
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 # Application definition
 
@@ -27,9 +30,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
-    'api',
-    'users',
-    'reviews',
+    "django_filters",
+    "api",
+    "reviews",
+    "user",
 ]
 
 MIDDLEWARE = [
@@ -98,6 +102,7 @@ USE_TZ = True
 STATIC_URL = "/static/"
 
 STATICFILES_DIRS = ((BASE_DIR / 'static/'),)
+
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
