@@ -1,3 +1,4 @@
+
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.filters import SearchFilter
@@ -64,6 +65,7 @@ class TitleViewSet(viewsets.ModelViewSet):
     permission_classes = AdminOrReadOnly
 
 
+
 class ReviewViewSet(viewsets.ModelViewSet):
     """Класс для работы с отзывами."""
 
@@ -92,6 +94,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     serializer_class = CommentSerializer
     permission_classes = AuthorOrStaffOrReadOnly
+
 
     def get_queryset(self):
         current_review = get_object_or_404(
