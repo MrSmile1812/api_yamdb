@@ -22,16 +22,6 @@ from django.shortcuts import get_object_or_404
 User = get_user_model()
 
 
-# Permissions для вьюсетов:
-# UserViewSet : IsAdminUser
-# MeViewSet:
-# CategoryViewSet: AdminOrReadOnly
-# TitleViewSet: AdminOrReadOnly
-# GenreViewSet: AdminOrReadOnly
-# ReviewViewSet: AuthorOrStaffOrReadOnly
-# CommentViewSet: AuthorOrStaffOrReadOnly
-
-
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def create_user(request):
