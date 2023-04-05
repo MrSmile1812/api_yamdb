@@ -1,7 +1,5 @@
 from datetime import date
 
-from django.db import models
-
 from reviews.constants import MAX_SCORE, MIN_SCORE
 from reviews.validators import (
     MaxValueValidator,
@@ -9,6 +7,8 @@ from reviews.validators import (
     UnicodeCategoryOrGenreNameValidator,
 )
 from user.models import User
+
+from django.db import models
 
 
 class Category(models.Model):
@@ -73,7 +73,6 @@ class Title(models.Model):
         return self.name
 
 
-
 class Review(models.Model):
     title = models.ForeignKey(
         Title,
@@ -114,7 +113,6 @@ class Review(models.Model):
 
     def __str__(self):
         return self.text
-
 
 
 class Comment(models.Model):
