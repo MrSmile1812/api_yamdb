@@ -23,6 +23,9 @@ class Category(models.Model):
         db_index=True,
     )
 
+    class Meta:
+        ordering = ["-id"]
+
     def __str__(self) -> str:
         return self.name
 
@@ -38,6 +41,9 @@ class Genre(models.Model):
         validators=[UnicodeCategoryOrGenreNameValidator],
         db_index=True,
     )
+
+    class Meta:
+        ordering = ["-id"]
 
     def __str__(self) -> str:
         return self.name
@@ -68,6 +74,9 @@ class Title(models.Model):
     genre = models.ManyToManyField(
         Genre, related_name="titles", verbose_name="жанр"
     )
+
+    class Meta:
+        ordering = ["-id"]
 
     def __str__(self) -> str:
         return self.name
@@ -109,7 +118,7 @@ class Review(models.Model):
                 name="unique review",
             )
         ]
-        ordering = ("pub_date",)
+        ordering = ["-id"]
 
     def __str__(self):
         return self.text
@@ -132,6 +141,9 @@ class Comment(models.Model):
     pub_date = models.DateTimeField(
         verbose_name="Дата добавления", auto_now_add=True, db_index=True
     )
+
+    class Meta:
+        ordering = ["-id"]
 
     def __str__(self):
         return self.text

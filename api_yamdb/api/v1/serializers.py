@@ -113,6 +113,7 @@ class TitleSerializer(serializers.ModelSerializer):
 class ReviewSerializer(serializers.ModelSerializer):
     """Класс для преобразования данных отзыва."""
 
+    title = serializers.SlugRelatedField(slug_field="name", read_only=True)
     author = SlugRelatedField(
         read_only=True, slug_field="username", default=CurrentUserDefault()
     )

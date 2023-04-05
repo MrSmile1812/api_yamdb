@@ -4,21 +4,24 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, viewsets
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.filters import SearchFilter
-from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from reviews.models import Category, Genre, Review, Title
 from user.models import User
 
 from django.contrib.auth import get_user_model
-from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 
 from api.filters import TitleFilter
 from api.v1.mixins import ModelMixinSet
-from api.v1.permissions import AdminOrReadOnly, AuthorOrStaffOrReadOnly
+from api.v1.permissions import (
+    AdminOnly,
+    AdminOrReadOnly,
+    AuthorOrStaffOrReadOnly,
+)
 from api.v1.serializers import (
     CategorySerializer,
     CommentSerializer,
@@ -63,28 +66,6 @@ def create_user(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-'''@api_view(["POST"])
-@permission_classes([AllowAny])
-def create_token(request):
-    """Получение токена."""
-    serializer = ObtainTokenSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    data = serializer.validated_data
-    if not serializer.is_valid():
-        return Response(
-            {"Неверные данные"}, status=status.HTTP_400_BAD_REQUEST
-        )
-    user = User.objects.get(username=data["username"])
-    confirmation_code = serializer.validated_data.get("confirmation_code")
-    if data.get("confirmation_code") != user.confirmation_code:
-        return Response(
-            [f"{user}, {confirmation_code}", "Ошибка"],
-            status=status.HTTP_400_BAD_REQUEST,
-        )
-    token = RefreshToken.for_user(user).access_token
-    return Response({"token": str(token)}, status=status.HTTP_200_OK)'''
-
-
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def create_token(request):
@@ -112,7 +93,10 @@ class UserViewSet(viewsets.ModelViewSet):
     lookup_field = "username"
     filter_backends = (SearchFilter,)
     search_fields = ("username",)
-    permission_classes = [IsAdminUser]
+    permission_classes = (
+        IsAuthenticated,
+        AdminOnly,
+    )
 
     def retrieve(self, request, *args, **kwargs):
         self.object = get_object_or_404(
@@ -185,7 +169,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         title_id = self.kwargs.get("title_id")
         current_title = get_object_or_404(
-            Title.objects.select_related("category", "genre"),
+            Title.objects,
             pk=title_id,
         )
         return current_title.reviews.all()
@@ -193,7 +177,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         title_id = self.kwargs.get("title_id")
         current_title = get_object_or_404(
-            Title.objects.select_related("category", "genre"),
+            Title.objects,
             pk=title_id,
         )
         serializer.save(author=self.request.user, title=current_title)
