@@ -100,7 +100,7 @@ def create_token(request):
             [f"{user}, {confirmation_code}", "Ошибка"],
             status=status.HTTP_400_BAD_REQUEST,
         )
-    token = RefreshToken.for_user(user)
+    token = RefreshToken.for_user(user).access_token
     return Response({"token": str(token)}, status=status.HTTP_200_OK)
 
 
