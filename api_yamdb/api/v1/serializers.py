@@ -23,6 +23,14 @@ class CreateUserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Недопустимое имя!")
         return data
 
+    def user_already_created(self, data):
+        data_username = data.get("username")
+        data_email = data.get("email")
+        username = User.objects.get(username=data_username).username
+        email = User.objects.get(email=data_email).email
+        if data_username == username and data_email == email:
+            return data
+
 
 class ObtainTokenSerializer(serializers.ModelSerializer):
     username = serializers.CharField(required=True)

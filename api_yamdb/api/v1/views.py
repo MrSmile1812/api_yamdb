@@ -47,6 +47,8 @@ User = get_user_model()
 def create_user(request):
     """Создание нового пользователя."""
     serializer = CreateUserSerializer(data=request.data)
+    if serializer.user_already_created(request.data):
+        return Response(request.data, status=status.HTTP_200_OK)
     serializer.is_valid(raise_exception=True)
     username = serializer.validated_data.get("username")
     email = serializer.validated_data.get("email")
