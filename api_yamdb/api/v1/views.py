@@ -99,13 +99,7 @@ class UserViewSet(viewsets.ModelViewSet):
         IsAuthenticated,
         AdminOnly,
     )
-
-    def retrieve(self, request, *args, **kwargs):
-        self.object = get_object_or_404(
-            User, username=self.request.user.username
-        )
-        serializer = self.get_serializer(self.object)
-        return Response(serializer.data)
+    http_method_names = ["get", "patch", "delete", "post"]
 
     @action(
         methods=["GET", "PATCH"],

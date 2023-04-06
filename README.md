@@ -51,6 +51,19 @@ pip install -r requirements.txt
     python manage.py migrate
     ```
 
+Если необходимо заполнить БД данными з файлов csv:
+
+* Если у вас Linux/macOS:
+
+    ```
+    python3 manage.py load_reviews_data.py
+    ```
+
+* Если у вас windows:
+
+    ```
+    python manage.py load_reviews_data.py
+    ```
 
 Запустить проект:
 

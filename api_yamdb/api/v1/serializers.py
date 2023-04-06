@@ -9,7 +9,10 @@ User = get_user_model()
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
-    """Сериализация регистрации пользователя и создания нового."""
+    """Сериализация регистрации пользователя и создания нового.
+    Проверки username пользователя на валидность и уже существующего
+    пользвателя.
+    """
 
     class Meta:
         model = User
@@ -26,13 +29,17 @@ class CreateUserSerializer(serializers.ModelSerializer):
     def user_already_created(self, data):
         data_username = data.get("username")
         data_email = data.get("email")
-        username = User.objects.get(username=data_username).username
-        email = User.objects.get(email=data_email).email
-        if data_username == username and data_email == email:
+        if (
+            User.objects.filter(username=data_username).exists()
+            and User.objects.filter(email=data_email).exists()
+        ):
             return data
 
 
 class ObtainTokenSerializer(serializers.ModelSerializer):
+    """Сериализатор для получения confirmation_code. И проверка валидности
+    полученного confirmation_code."""
+
     username = serializers.CharField(required=True)
     confirmation_code = serializers.CharField(required=True)
 
@@ -52,6 +59,8 @@ class ObtainTokenSerializer(serializers.ModelSerializer):
 
 
 class NotAdminSerializer(serializers.ModelSerializer):
+    """Сериализатор пользователя, не администратора."""
+
     class Meta:
         model = User
         fields = (
@@ -66,6 +75,8 @@ class NotAdminSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """Сериализатор пользователя."""
+
     class Meta:
         model = User
         fields = (
@@ -79,24 +90,32 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    """Сериализатор категорий."""
+
     class Meta:
         model = Category
         fields = ("name", "slug")
 
 
 class GenreSerializer(serializers.ModelSerializer):
+    """Сериализатор жанров."""
+
     class Meta:
         model = Genre
         fields = ("name", "slug")
 
 
 class SlugDictRelatedField(serializers.SlugRelatedField):
+    """Сериализатор для корректного вывода данных при запросах."""
+
     def to_representation(self, obj):
         result = {"name": obj.name, "slug": obj.slug}
         return result
 
 
 class TitleSerializer(serializers.ModelSerializer):
+    """Сериализатор произведений."""
+
     category = SlugDictRelatedField(
         queryset=Category.objects.all(), slug_field="slug"
     )
