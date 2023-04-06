@@ -51,7 +51,7 @@ pip install -r requirements.txt
     python manage.py migrate
     ```
 
-Если необходимо заполнить БД данными з файлов csv:
+Если необходимо заполнить БД данными из файлов csv:
 
 * Если у вас Linux/macOS:
 
