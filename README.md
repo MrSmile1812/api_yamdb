@@ -56,13 +56,13 @@ pip install -r requirements.txt
 * Если у вас Linux/macOS:
 
     ```
-    python3 manage.py load_reviews_data.py
+    python3 manage.py load_reviews_data
     ```
 
 * Если у вас windows:
 
     ```
-    python manage.py load_reviews_data.py
+    python manage.py load_reviews_data
     ```
 
 Запустить проект:
