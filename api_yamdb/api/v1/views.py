@@ -43,28 +43,34 @@ from .serializers import (
 User = get_user_model()
 
 
+def my_send_mail(confirmation_code, email):
+    send_mail(
+        "Your confirmation code",
+        str(confirmation_code),
+        None,
+        [email],
+        fail_silently=False,
+    )
+
+
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def create_user(request):
     """Создание нового пользователя."""
     serializer = CreateUserSerializer(data=request.data)
+    confirmation_code = uuid.uuid4()
     if serializer.user_already_created(request.data):
+        email = request.data.get("email")
+        my_send_mail(confirmation_code, email)
         return Response(request.data, status=status.HTTP_200_OK)
     serializer.is_valid(raise_exception=True)
     username = serializer.validated_data.get("username")
     email = serializer.validated_data.get("email")
-    confirmation_code = uuid.uuid4()
     if serializer.is_valid():
         user, created = User.objects.get_or_create(
             username=username, email=email, confirmation_code=confirmation_code
         )
-        send_mail(
-            "Your confirmation code",
-            str(confirmation_code),
-            None,
-            [email],
-            fail_silently=False,
-        )
+        my_send_mail(confirmation_code, email)
         return Response(request.data, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
