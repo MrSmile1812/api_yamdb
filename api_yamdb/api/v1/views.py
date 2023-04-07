@@ -7,8 +7,6 @@ from rest_framework.filters import SearchFilter
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from reviews.models import Category, Genre, Review, Title
-from user.models import User
 
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
@@ -31,6 +29,8 @@ from api.v1.serializers import (
     TitleSerializer,
     UserSerializer,
 )
+from reviews.models import Category, Genre, Review, Title
+from user.models import User
 
 from .serializers import (
     CommentSerializer,
@@ -38,6 +38,7 @@ from .serializers import (
     ObtainTokenSerializer,
     ReviewSerializer,
 )
+
 
 User = get_user_model()
 
@@ -60,7 +61,7 @@ def create_user(request):
         send_mail(
             "Your confirmation code",
             str(confirmation_code),
-            "from@example.com",
+            None,
             [email],
             fail_silently=False,
         )
@@ -149,7 +150,11 @@ class GenreViewSet(ModelMixinSet):
 class TitleViewSet(viewsets.ModelViewSet):
     """Класс для работы с произведениями."""
 
-    queryset = Title.objects.annotate(rating=Avg("reviews__score")).all()
+    queryset = (
+        Title.objects.select_related("category")
+        .annotate(rating=Avg("reviews__score"))
+        .all()
+    )
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TitleFilter
     serializer_class = TitleSerializer
@@ -168,7 +173,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
             Title.objects,
             pk=title_id,
         )
-        return current_title.reviews.all()
+        return current_title.reviews.select_related("author").all()
 
     def perform_create(self, serializer):
         title_id = self.kwargs.get("title_id")
@@ -190,7 +195,7 @@ class CommentViewSet(viewsets.ModelViewSet):
             Review.objects.select_related("title", "author"),
             pk=self.kwargs.get("review_id"),
         )
-        return current_review.comments.all()
+        return current_review.comments.select_related("author").all()
 
     def perform_create(self, serializer):
         title_id = self.kwargs.get("title_id")

@@ -1,8 +1,8 @@
-from user.constants import TYPE_OF_USER
-from user.validators import UnicodeUsernameValidator
-
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+
+from user.constants import TYPE_OF_USER
+from user.validators import UnicodeUsernameValidator
 
 
 class User(AbstractUser):
@@ -32,7 +32,7 @@ class User(AbstractUser):
     )
     role = models.CharField(
         verbose_name="Роль",
-        choices=TYPE_OF_USER,
+        choices=TYPE_OF_USER.choices,
         default="user",
         max_length=9,
         blank=True,
@@ -59,7 +59,7 @@ class User(AbstractUser):
 
     @property
     def is_admin(self):
-        return self.role == "admin"
+        return self.role == "admin" or self.is_superuser
 
     @property
     def is_moderator(self):

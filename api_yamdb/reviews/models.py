@@ -1,14 +1,12 @@
 from datetime import date
 
-from reviews.constants import MAX_SCORE, MIN_SCORE
+from django.db import models
+
+from reviews.constants import MAX_SCORE, MIN_SCORE, TEXT_LENGTH
 from reviews.validators import (
-    MaxValueValidator,
-    MinValueValidator,
-    UnicodeCategoryOrGenreNameValidator,
+    MaxValueValidator, MinValueValidator, UnicodeCategoryOrGenreNameValidator,
 )
 from user.models import User
-
-from django.db import models
 
 
 class Category(models.Model):
@@ -115,13 +113,13 @@ class Review(models.Model):
                     "title",
                     "author",
                 ),
-                name="unique review",
+                name="uq_author_title",
             )
         ]
         ordering = ["-id"]
 
     def __str__(self):
-        return self.text
+        return self.text[:TEXT_LENGTH]
 
 
 class Comment(models.Model):
@@ -146,4 +144,4 @@ class Comment(models.Model):
         ordering = ["-id"]
 
     def __str__(self):
-        return self.text
+        return self.text[:TEXT_LENGTH]

@@ -1,9 +1,11 @@
 from rest_framework import serializers
 from rest_framework.serializers import CurrentUserDefault, SlugRelatedField
+
+from django.contrib.auth import get_user_model
+
 from reviews.models import Category, Comment, Genre, Review, Title
 from user.models import User
 
-from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
